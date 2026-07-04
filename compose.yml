@@ -1,0 +1,8 @@
+services:
+  heartbeatmqtt:
+    build: .
+    image: mbush91/heartbeatmqtt:latest
+    env_file:
+      - .env
+    restart: unless-stopped
+    init: true
