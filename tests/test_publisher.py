@@ -35,7 +35,7 @@ class FakeClient:
 
     def connect_async(self, host, port=1883, keepalive=60):
         self.calls.append(("connect_async", host, port, keepalive))
-        return 0
+        return None
 
     def loop_start(self):
         self.calls.append(("loop_start",))
@@ -73,6 +73,16 @@ def make_settings():
         heartbeat_interval_seconds=60.0,
         publish_immediately=True,
     )
+
+
+def test_start_accepts_connect_async_none_return():
+    fake = FakeClient()
+    publisher = HeartbeatPublisher(make_settings(), client=fake)
+
+    publisher.start()
+
+    assert ("connect_async", "broker.local", 1883, 30) in fake.calls
+    assert ("loop_start",) in fake.calls
 
 
 def test_publish_once_when_connected():
